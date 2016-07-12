@@ -1,0 +1,402 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="cs658project" default="all">
+  
+  
+  <property file="build.properties"/>
+  <!-- Uncomment the following property if no tests compilation is needed -->
+  <!-- 
+  <property name="skip.tests" value="true"/>
+   -->
+  
+  <!-- Compiler options -->
+  
+  <property name="compiler.debug" value="on"/>
+  <property name="compiler.generate.no.warnings" value="off"/>
+  <property name="compiler.args" value=""/>
+  <property name="compiler.max.memory" value="700m"/>
+  <patternset id="ignored.files">
+    <exclude name="**/*.hprof/**"/>
+    <exclude name="**/*.pyc/**"/>
+    <exclude name="**/*.pyo/**"/>
+    <exclude name="**/*.rbc/**"/>
+    <exclude name="**/*.yarb/**"/>
+    <exclude name="**/*~/**"/>
+    <exclude name="**/.DS_Store/**"/>
+    <exclude name="**/.git/**"/>
+    <exclude name="**/.hg/**"/>
+    <exclude name="**/.svn/**"/>
+    <exclude name="**/CVS/**"/>
+    <exclude name="**/RCS/**"/>
+    <exclude name="**/SCCS/**"/>
+    <exclude name="**/__pycache__/**"/>
+    <exclude name="**/_svn/**"/>
+    <exclude name="**/rcs/**"/>
+    <exclude name="**/vssver.scc/**"/>
+    <exclude name="**/vssver2.scc/**"/>
+  </patternset>
+  <patternset id="library.patterns">
+    <include name="*.egg"/>
+    <include name="*.jar"/>
+    <include name="*.ear"/>
+    <include name="*.ane"/>
+    <include name="*.apk"/>
+    <include name="*.swc"/>
+    <include name="*.war"/>
+    <include name="*.zip"/>
+  </patternset>
+  <patternset id="compiler.resources">
+    <exclude name="**/?*.java"/>
+    <exclude name="**/?*.form"/>
+    <exclude name="**/?*.class"/>
+    <exclude name="**/?*.groovy"/>
+    <exclude name="**/?*.scala"/>
+    <exclude name="**/?*.flex"/>
+    <exclude name="**/?*.kt"/>
+    <exclude name="**/?*.clj"/>
+    <exclude name="**/?*.aj"/>
+  </patternset>
+  
+  <!-- JDK definitions -->
+  
+  <property name="jdk.bin.1.8" value="${jdk.home.1.8}/bin"/>
+  <path id="jdk.classpath.1.8">
+    <fileset dir="${jdk.home.1.8}">
+      <include name="jre/lib/charsets.jar"/>
+      <include name="jre/lib/deploy.jar"/>
+      <include name="jre/lib/ext/cldrdata.jar"/>
+      <include name="jre/lib/ext/dnsns.jar"/>
+      <include name="jre/lib/ext/jaccess.jar"/>
+      <include name="jre/lib/ext/jfxrt.jar"/>
+      <include name="jre/lib/ext/localedata.jar"/>
+      <include name="jre/lib/ext/nashorn.jar"/>
+      <include name="jre/lib/ext/sunec.jar"/>
+      <include name="jre/lib/ext/sunjce_provider.jar"/>
+      <include name="jre/lib/ext/sunpkcs11.jar"/>
+      <include name="jre/lib/ext/zipfs.jar"/>
+      <include name="jre/lib/javaws.jar"/>
+      <include name="jre/lib/jce.jar"/>
+      <include name="jre/lib/jfr.jar"/>
+      <include name="jre/lib/jfxswt.jar"/>
+      <include name="jre/lib/jsse.jar"/>
+      <include name="jre/lib/management-agent.jar"/>
+      <include name="jre/lib/plugin.jar"/>
+      <include name="jre/lib/resources.jar"/>
+      <include name="jre/lib/rt.jar"/>
+    </fileset>
+  </path>
+  
+  <property name="project.jdk.home" value="${jdk.home.1.8}"/>
+  <property name="project.jdk.bin" value="${jdk.bin.1.8}"/>
+  <property name="project.jdk.classpath" value="jdk.classpath.1.8"/>
+  
+  <!-- Modules -->
+  
+  
+  <!-- Module Utilities -->
+  
+  <dirname property="module.utilities.basedir" file="${ant.file}"/>
+  
+  
+  <property name="module.jdk.home.utilities" value="${project.jdk.home}"/>
+  <property name="module.jdk.bin.utilities" value="${project.jdk.bin}"/>
+  <property name="module.jdk.classpath.utilities" value="${project.jdk.classpath}"/>
+  
+  <property name="compiler.args.utilities" value="-encoding UTF-8 -source 8 -target 8 ${compiler.args}"/>
+  
+  <property name="utilities.output.dir" value="${module.utilities.basedir}/out/production/Utilities"/>
+  <property name="utilities.testoutput.dir" value="${module.utilities.basedir}/out/test/Utilities"/>
+  
+  <path id="utilities.module.bootclasspath">
+    <!-- Paths to be included in compilation bootclasspath -->
+  </path>
+  
+  <path id="utilities.module.production.classpath">
+    <path refid="${module.jdk.classpath.utilities}"/>
+  </path>
+  
+  <path id="utilities.runtime.production.module.classpath">
+    <pathelement location="${utilities.output.dir}"/>
+  </path>
+  
+  <path id="utilities.module.classpath">
+    <path refid="${module.jdk.classpath.utilities}"/>
+    <pathelement location="${utilities.output.dir}"/>
+  </path>
+  
+  <path id="utilities.runtime.module.classpath">
+    <pathelement location="${utilities.testoutput.dir}"/>
+    <pathelement location="${utilities.output.dir}"/>
+  </path>
+  
+  
+  <patternset id="excluded.from.module.utilities">
+    <patternset refid="ignored.files"/>
+  </patternset>
+  
+  <patternset id="excluded.from.compilation.utilities">
+    <patternset refid="excluded.from.module.utilities"/>
+  </patternset>
+  
+  <path id="utilities.module.sourcepath">
+    <dirset dir="${module.utilities.basedir}/Utilities">
+      <include name="src"/>
+    </dirset>
+  </path>
+  
+  
+  <target name="compile.module.utilities" depends="compile.module.utilities.production,compile.module.utilities.tests" description="Compile module Utilities"/>
+  
+  <target name="compile.module.utilities.production" description="Compile module Utilities; production classes">
+    <mkdir dir="${utilities.output.dir}"/>
+    <javac destdir="${utilities.output.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true" executable="${module.jdk.bin.utilities}/javac">
+      <compilerarg line="${compiler.args.utilities}"/>
+      <bootclasspath refid="utilities.module.bootclasspath"/>
+      <classpath refid="utilities.module.production.classpath"/>
+      <src refid="utilities.module.sourcepath"/>
+      <patternset refid="excluded.from.compilation.utilities"/>
+    </javac>
+    
+    <copy todir="${utilities.output.dir}">
+      <fileset dir="${module.utilities.basedir}/Utilities/src">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+    </copy>
+  </target>
+  
+  <target name="compile.module.utilities.tests" depends="compile.module.utilities.production" description="compile module Utilities; test classes" unless="skip.tests"/>
+  
+  <target name="clean.module.utilities" description="cleanup module">
+    <delete dir="${utilities.output.dir}"/>
+    <delete dir="${utilities.testoutput.dir}"/>
+  </target>
+  
+  
+  <!-- Module Bootstrap -->
+  
+  <dirname property="module.bootstrap.basedir" file="${ant.file}"/>
+  
+  
+  <property name="module.jdk.home.bootstrap" value="${project.jdk.home}"/>
+  <property name="module.jdk.bin.bootstrap" value="${project.jdk.bin}"/>
+  <property name="module.jdk.classpath.bootstrap" value="${project.jdk.classpath}"/>
+  
+  <property name="compiler.args.bootstrap" value="-encoding UTF-8 -source 8 -target 8 ${compiler.args}"/>
+  
+  <property name="bootstrap.output.dir" value="${module.bootstrap.basedir}/out/production/Bootstrap"/>
+  <property name="bootstrap.testoutput.dir" value="${module.bootstrap.basedir}/out/test/Bootstrap"/>
+  
+  <path id="bootstrap.module.bootclasspath">
+    <!-- Paths to be included in compilation bootclasspath -->
+  </path>
+  
+  <path id="bootstrap.module.production.classpath">
+    <path refid="${module.jdk.classpath.bootstrap}"/>
+    <pathelement location="${utilities.output.dir}"/>
+  </path>
+  
+  <path id="bootstrap.runtime.production.module.classpath">
+    <pathelement location="${bootstrap.output.dir}"/>
+    <path refid="utilities.runtime.production.module.classpath"/>
+  </path>
+  
+  <path id="bootstrap.module.classpath">
+    <path refid="${module.jdk.classpath.bootstrap}"/>
+    <pathelement location="${bootstrap.output.dir}"/>
+    <pathelement location="${utilities.testoutput.dir}"/>
+    <pathelement location="${utilities.output.dir}"/>
+  </path>
+  
+  <path id="bootstrap.runtime.module.classpath">
+    <pathelement location="${bootstrap.testoutput.dir}"/>
+    <pathelement location="${bootstrap.output.dir}"/>
+    <path refid="utilities.runtime.module.classpath"/>
+  </path>
+  
+  
+  <patternset id="excluded.from.module.bootstrap">
+    <patternset refid="ignored.files"/>
+  </patternset>
+  
+  <patternset id="excluded.from.compilation.bootstrap">
+    <patternset refid="excluded.from.module.bootstrap"/>
+  </patternset>
+  
+  <path id="bootstrap.module.sourcepath">
+    <dirset dir="${module.bootstrap.basedir}/Bootstrap">
+      <include name="src"/>
+    </dirset>
+  </path>
+  
+  
+  <target name="compile.module.bootstrap" depends="compile.module.bootstrap.production,compile.module.bootstrap.tests" description="Compile module Bootstrap"/>
+  
+  <target name="compile.module.bootstrap.production" depends="compile.module.utilities" description="Compile module Bootstrap; production classes">
+    <mkdir dir="${bootstrap.output.dir}"/>
+    <javac destdir="${bootstrap.output.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true" executable="${module.jdk.bin.bootstrap}/javac">
+      <compilerarg line="${compiler.args.bootstrap}"/>
+      <bootclasspath refid="bootstrap.module.bootclasspath"/>
+      <classpath refid="bootstrap.module.production.classpath"/>
+      <src refid="bootstrap.module.sourcepath"/>
+      <patternset refid="excluded.from.compilation.bootstrap"/>
+    </javac>
+    
+    <copy todir="${bootstrap.output.dir}">
+      <fileset dir="${module.bootstrap.basedir}/Bootstrap/src">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+    </copy>
+  </target>
+  
+  <target name="compile.module.bootstrap.tests" depends="compile.module.bootstrap.production" description="compile module Bootstrap; test classes" unless="skip.tests"/>
+  
+  <target name="clean.module.bootstrap" description="cleanup module">
+    <delete dir="${bootstrap.output.dir}"/>
+    <delete dir="${bootstrap.testoutput.dir}"/>
+  </target>
+  
+  
+  <!-- Module TreeDHT -->
+  
+  <dirname property="module.treedht.basedir" file="${ant.file}"/>
+  
+  
+  <property name="module.jdk.home.treedht" value="${project.jdk.home}"/>
+  <property name="module.jdk.bin.treedht" value="${project.jdk.bin}"/>
+  <property name="module.jdk.classpath.treedht" value="${project.jdk.classpath}"/>
+  
+  <property name="compiler.args.treedht" value="-encoding UTF-8 -source 8 -target 8 ${compiler.args}"/>
+  
+  <property name="treedht.output.dir" value="${module.treedht.basedir}/out/production/TreeDHT"/>
+  <property name="treedht.testoutput.dir" value="${module.treedht.basedir}/out/test/TreeDHT"/>
+  
+  <path id="treedht.module.bootclasspath">
+    <!-- Paths to be included in compilation bootclasspath -->
+  </path>
+  
+  <path id="treedht.module.production.classpath">
+    <path refid="${module.jdk.classpath.treedht}"/>
+    <pathelement location="${utilities.output.dir}"/>
+  </path>
+  
+  <path id="treedht.runtime.production.module.classpath">
+    <pathelement location="${treedht.output.dir}"/>
+    <path refid="utilities.runtime.production.module.classpath"/>
+  </path>
+  
+  <path id="treedht.module.classpath">
+    <path refid="${module.jdk.classpath.treedht}"/>
+    <pathelement location="${treedht.output.dir}"/>
+    <pathelement location="${utilities.testoutput.dir}"/>
+    <pathelement location="${utilities.output.dir}"/>
+  </path>
+  
+  <path id="treedht.runtime.module.classpath">
+    <pathelement location="${treedht.testoutput.dir}"/>
+    <pathelement location="${treedht.output.dir}"/>
+    <path refid="utilities.runtime.module.classpath"/>
+  </path>
+  
+  
+  <patternset id="excluded.from.module.treedht">
+    <patternset refid="ignored.files"/>
+  </patternset>
+  
+  <patternset id="excluded.from.compilation.treedht">
+    <patternset refid="excluded.from.module.treedht"/>
+  </patternset>
+  
+  <path id="treedht.module.sourcepath">
+    <dirset dir="${module.treedht.basedir}/TreeDHT">
+      <include name="src"/>
+    </dirset>
+  </path>
+  
+  
+  <target name="compile.module.treedht" depends="compile.module.treedht.production,compile.module.treedht.tests" description="Compile module TreeDHT"/>
+  
+  <target name="compile.module.treedht.production" depends="compile.module.utilities" description="Compile module TreeDHT; production classes">
+    <mkdir dir="${treedht.output.dir}"/>
+    <javac destdir="${treedht.output.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true" executable="${module.jdk.bin.treedht}/javac">
+      <compilerarg line="${compiler.args.treedht}"/>
+      <bootclasspath refid="treedht.module.bootclasspath"/>
+      <classpath refid="treedht.module.production.classpath"/>
+      <src refid="treedht.module.sourcepath"/>
+      <patternset refid="excluded.from.compilation.treedht"/>
+    </javac>
+    
+    <copy todir="${treedht.output.dir}">
+      <fileset dir="${module.treedht.basedir}/TreeDHT/src">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+    </copy>
+  </target>
+  
+  <target name="compile.module.treedht.tests" depends="compile.module.treedht.production" description="compile module TreeDHT; test classes" unless="skip.tests"/>
+  
+  <target name="clean.module.treedht" description="cleanup module">
+    <delete dir="${treedht.output.dir}"/>
+    <delete dir="${treedht.testoutput.dir}"/>
+  </target>
+  
+  <target name="init" description="Build initialization">
+    <!-- Perform any build initialization in this target -->
+  </target>
+  
+  <target name="clean" depends="clean.module.utilities, clean.module.bootstrap, clean.module.treedht" description="cleanup all"/>
+  
+  <target name="build.modules" depends="init, clean, compile.module.utilities, compile.module.bootstrap, compile.module.treedht" description="build all modules"/>
+  
+  <target name="init.artifacts">
+    <property name="artifacts.temp.dir" value="${basedir}/__artifacts_temp"/>
+    <property name="artifact.output.bootstrap:jar" value="${basedir}"/>
+    <property name="artifact.output.treedht:jar" value="${basedir}"/>
+    <mkdir dir="${artifacts.temp.dir}"/>
+    <property name="temp.jar.path.Bootstrap.jar" value="${artifacts.temp.dir}/Bootstrap.jar"/>
+    <property name="temp.jar.path.TreeDHT.jar" value="${artifacts.temp.dir}/TreeDHT.jar"/>
+  </target>
+  
+  <target name="artifact.bootstrap:jar" depends="init.artifacts, compile.module.bootstrap, compile.module.utilities" description="Build &#39;Bootstrap:jar&#39; artifact">
+    <property name="artifact.temp.output.bootstrap:jar" value="${artifacts.temp.dir}/Bootstrap_jar"/>
+    <mkdir dir="${artifact.temp.output.bootstrap:jar}"/>
+    <jar destfile="${temp.jar.path.Bootstrap.jar}" duplicate="preserve" filesetmanifest="mergewithoutmain">
+      <zipfileset dir="${bootstrap.output.dir}"/>
+      <zipfileset dir="${utilities.output.dir}"/>
+      <manifest>
+        <attribute name="Main-Class" value="cs658.project.bootstrap.BootstrapServer"/>
+      </manifest>
+    </jar>
+    <copy file="${temp.jar.path.Bootstrap.jar}" tofile="${artifact.temp.output.bootstrap:jar}/Bootstrap.jar"/>
+  </target>
+  
+  <target name="artifact.treedht:jar" depends="init.artifacts, compile.module.treedht, compile.module.utilities" description="Build &#39;TreeDHT:jar&#39; artifact">
+    <property name="artifact.temp.output.treedht:jar" value="${artifacts.temp.dir}/TreeDHT_jar"/>
+    <mkdir dir="${artifact.temp.output.treedht:jar}"/>
+    <jar destfile="${temp.jar.path.TreeDHT.jar}" duplicate="preserve" filesetmanifest="mergewithoutmain">
+      <zipfileset dir="${treedht.output.dir}"/>
+      <zipfileset dir="${utilities.output.dir}"/>
+      <manifest>
+        <attribute name="Main-Class" value="cs658.project.binarytreedht.Main"/>
+      </manifest>
+    </jar>
+    <copy file="${temp.jar.path.TreeDHT.jar}" tofile="${artifact.temp.output.treedht:jar}/TreeDHT.jar"/>
+  </target>
+  
+  <target name="build.all.artifacts" depends="artifact.bootstrap:jar, artifact.treedht:jar" description="Build all artifacts">
+    <mkdir dir="${artifact.output.bootstrap:jar}"/>
+    <copy todir="${artifact.output.bootstrap:jar}">
+      <fileset dir="${artifact.temp.output.bootstrap:jar}"/>
+    </copy>
+    <mkdir dir="${artifact.output.treedht:jar}"/>
+    <copy todir="${artifact.output.treedht:jar}">
+      <fileset dir="${artifact.temp.output.treedht:jar}"/>
+    </copy>
+    
+    <!-- Delete temporary files -->
+    <delete dir="${artifacts.temp.dir}"/>
+  </target>
+  
+  <target name="all" depends="build.modules, build.all.artifacts" description="build all"/>
+</project>

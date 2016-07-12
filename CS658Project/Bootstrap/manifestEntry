@@ -1,0 +1,3 @@
+            <manifest>
+                <attribute name="Main-Class" value="cs658.project.bootstrap.BootstrapServer"/>
+            </manifest>
